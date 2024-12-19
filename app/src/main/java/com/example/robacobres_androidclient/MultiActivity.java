@@ -231,4 +231,11 @@ public class MultiActivity extends AppCompatActivity implements AuthCallback, Us
 
     }
 
+    public void onClickFAQ(View view) {
+        // Iniciar la actividad de FAQ
+        Intent intent = new Intent(this, FAQActivity.class); // Asegúrate de tener la actividad FAQActivity creada
+        startActivity(intent);
+    }
+
+
 }

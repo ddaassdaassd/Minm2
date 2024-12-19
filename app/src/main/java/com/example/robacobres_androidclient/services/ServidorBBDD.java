@@ -2,6 +2,7 @@ package com.example.robacobres_androidclient.services;
 
 import com.example.robacobres_androidclient.models.ChangePassword;
 import com.example.robacobres_androidclient.models.ChatIndividual;
+import com.example.robacobres_androidclient.models.FAQ;
 import com.example.robacobres_androidclient.models.Forum;
 import com.example.robacobres_androidclient.models.GameCharacter;
 import com.example.robacobres_androidclient.models.Item;
@@ -102,6 +103,9 @@ public interface ServidorBBDD {
 
     @GET("store/CharactersUserCanBuy") //ARREGLAR
     Call<List<GameCharacter>> getCharactersUserCanBuy();
+
+    @GET("users/faqs")
+    Call<List<FAQ>> getFAQs();
 
 
     /*

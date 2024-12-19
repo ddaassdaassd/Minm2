@@ -6,6 +6,7 @@ import android.util.Log;
 import com.example.robacobres_androidclient.callbacks.AuthCallback;
 import com.example.robacobres_androidclient.callbacks.CharacterCallback;
 import com.example.robacobres_androidclient.callbacks.ChargeDataCallback;
+import com.example.robacobres_androidclient.callbacks.FAQCallback;
 import com.example.robacobres_androidclient.callbacks.ForumCallback;
 import com.example.robacobres_androidclient.callbacks.ItemCallback;
 import com.example.robacobres_androidclient.callbacks.PrivateCallback;
@@ -14,6 +15,7 @@ import com.example.robacobres_androidclient.interceptors.AddCookiesInterceptor;
 import com.example.robacobres_androidclient.interceptors.ReceivedCookiesInterceptor;
 import com.example.robacobres_androidclient.models.ChangePassword;
 import com.example.robacobres_androidclient.models.ChatIndividual;
+import com.example.robacobres_androidclient.models.FAQ;
 import com.example.robacobres_androidclient.models.Forum;
 import com.example.robacobres_androidclient.models.GameCharacter;
 import com.example.robacobres_androidclient.models.Item;
@@ -764,6 +766,35 @@ public class ServiceBBDD {
             @Override
             public void onFailure(Call<List<ChatIndividual>> call, Throwable t) {
                 Log.e("API_ERROR", "API call failed", t);
+            }
+        });
+    }
+
+    public void getFAQs(final FAQCallback faqCallback) {
+        Call<List<FAQ>> call = serv.getFAQs(); // Asegúrate de que esta llamada sea correcta en tu servicio.
+        call.enqueue(new Callback<List<FAQ>>() {
+            @Override
+            public void onResponse(Call<List<FAQ>> call, Response<List<FAQ>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<FAQ> faqs = response.body();
+                    faqCallback.onFAQCallback(faqs);  // Pasar las preguntas frecuentes a través del callback
+                    Log.d("API_RESPONSE", "GET FAQs SUCCESSFUL");
+                } else if (response.code() == 502) {
+                    faqCallback.onMessage("No FAQs Available");
+                    Log.d("API_RESPONSE", "Response not successful, code: " + response.code());
+                } else if (response.code() == 506) {
+                    faqCallback.onMessage("USER NOT LOGGED IN");
+                    Log.d("API_RESPONSE", "Response not successful, code: " + response.code());
+                } else {
+                    faqCallback.onMessage("ERROR");
+                    Log.d("API_RESPONSE", "Response not successful, code: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<FAQ>> call, Throwable t) {
+                Log.e("API_ERROR", "API call failed", t);
+                faqCallback.onMessage("Failed to fetch FAQs");
             }
         });
     }
